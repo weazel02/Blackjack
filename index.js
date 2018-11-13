@@ -5,6 +5,14 @@ var values = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
 var deck = [];
 var legend = [];
 var employeeList = [];
+//By default the dealer is player[0]
+var players = [];
+var player = {
+    Hand: [],
+    Score: 0,
+
+}
+var gameEnded = false;
 
 function generateDeck(){
     //Get 13 random employees
@@ -35,9 +43,7 @@ function generateDeck(){
                     trueValue = [1,11];
                 }
             }
-            
-            var Person 
-            //Create a card object with the suit,value,weight
+            //Create a card object with the suit,value,weight,employee
             var card = {
                 Value: values[i],
                 Suit: suits[j],
@@ -79,6 +85,43 @@ request.onload = function () {
     generateDeck();
     console.log("Deck Length: " + deck.length);
     console.log(deck);
+
+        
+        //console.log(legend[0])
+        var playCard = document.createElement("div");
+        playCard.id = 'card';
+
+        var img = document.createElement("img");
+        var iconTopLeft = document.createElement("img");
+        iconTopLeft.src = 'icons/red-heart.png';
+        iconTopLeft.id = 'iconTopLeft';
+
+        var iconTopRight = document.createElement("img");
+        iconTopRight.src = 'icons/red-heart.png';
+        iconTopRight.id = 'iconTopRight';
+
+        var iconBottomRight = document.createElement("img");
+        iconBottomRight.src = 'icons/red-heart.png';
+        iconBottomRight.id = 'iconBottomRight';
+
+        var iconBottomLeft = document.createElement("img");
+        iconBottomLeft.src = 'icons/red-heart.png';
+        iconBottomLeft.id = 'iconBottomLeft';
+
+        img.src = legend[0].imgUrl;
+        img.id = 'cardFace';
+        playCard.appendChild(img);
+        playCard.appendChild(iconBottomLeft);
+        playCard.appendChild(iconBottomRight);
+        playCard.appendChild(iconTopLeft);
+        playCard.appendChild(iconTopRight);
+        
+
+        var src = document.getElementById("main");
+        src.appendChild(playCard);
+        
+
+    
     
   }
 // Send request

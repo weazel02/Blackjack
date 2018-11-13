@@ -1,0 +1,49 @@
+#card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    width: 220px;
+    height: 300px;
+    border-color: red;
+}
+
+#cardFace {
+    border-radius: 5px 5px 0 0;
+    margin: 100px 60px 100px 60px;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+
+}
+#iconTopLeft{
+    margin: 10px 140px 0px 10px;
+    width:30px;
+    height:30px;
+    position: absolute;
+
+}
+#iconTopRight{
+    margin: 10px 10px 0px 180px;
+    width:30px;
+    height:30px;
+    position: absolute;
+
+}
+#iconBottomRight{
+    margin: 260px 10px 10px 180px;
+    width:30px;
+    height:30px;
+    position: absolute;
+}
+#iconBottomLeft{
+    margin: 260px 0px 10px 10px;
+    width:30px;
+    height:30px;
+    position: absolute;
+
+}
+
+#main{  
+    width: 100%;
+    height: 100%;
+}
