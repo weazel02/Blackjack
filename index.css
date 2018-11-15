@@ -44,6 +44,28 @@
 }
 
 #main{  
-    width: 100%;
-    height: 100%;
+   
+ }
+.score_layout{
+    width:100vw;
+    height:10vh;
+    background-color: purple;
+}
+#dealer_layout{
+    width: 70vw;
+    height: 45vh;
+    background-color: red;
+}
+#player_layout{
+    width:70vw;
+    height:45vh;
+    background-color: black;
+}
+#legend_layout{
+    width:30vw;
+    height:90vh;
+    float:right;
+    background-color: blue;
+    border-width: 10px;
+    text-align: center;
 }

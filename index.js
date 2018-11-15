@@ -6,13 +6,69 @@ var deck = [];
 var legend = [];
 var employeeList = [];
 //By default the dealer is player[0]
-var players = [];
-var player = {
-    Hand: [],
-    Score: 0,
+var players = new Array();
 
-}
 var gameEnded = false;
+
+function generatePlayers(num){
+    for (let k = 0; k < num; k++){
+        if(k == 0){
+            var player = {
+                Hand: [],
+                Score: 0,
+                Name: 'Dealer'
+            }
+            players.push(player);
+        }else{
+            var player = {
+                Hand: [],
+                Score: 0,
+                Name: 'Player'
+            }
+            players.push(player);
+        }
+    }
+}
+
+function renderCard(card, player){
+        var hand = document.getElementById('hand_' + player);
+        hand.appendChild(getCardUI(card));
+    }
+
+function generateCardUI(imageSrc,icon){
+        var playCard = document.createElement("div");
+        playCard.id = 'card';
+
+        var img = document.createElement("img");
+        var iconTopLeft = document.createElement("img");
+        iconTopLeft.src = 'icons/red-heart.png';
+        iconTopLeft.id = 'iconTopLeft';
+
+        var iconTopRight = document.createElement("img");
+        iconTopRight.src = 'icons/red-heart.png';
+        iconTopRight.id = 'iconTopRight';
+
+        var iconBottomRight = document.createElement("img");
+        iconBottomRight.src = 'icons/red-heart.png';
+        iconBottomRight.id = 'iconBottomRight';
+
+        var iconBottomLeft = document.createElement("img");
+        iconBottomLeft.src = 'icons/red-heart.png';
+        iconBottomLeft.id = 'iconBottomLeft';
+
+        img.src = legend[0].imgUrl;
+        img.id = 'cardFace';
+        playCard.appendChild(img);
+        playCard.appendChild(iconBottomLeft);
+        playCard.appendChild(iconBottomRight);
+        playCard.appendChild(iconTopLeft);
+        playCard.appendChild(iconTopRight);
+        
+
+        var src = document.getElementById("main");
+        src.appendChild(playCard);
+}
+
 
 function generateDeck(){
     //Get 13 random employees
@@ -86,43 +142,6 @@ request.onload = function () {
     console.log("Deck Length: " + deck.length);
     console.log(deck);
 
-        
-        //console.log(legend[0])
-        var playCard = document.createElement("div");
-        playCard.id = 'card';
-
-        var img = document.createElement("img");
-        var iconTopLeft = document.createElement("img");
-        iconTopLeft.src = 'icons/red-heart.png';
-        iconTopLeft.id = 'iconTopLeft';
-
-        var iconTopRight = document.createElement("img");
-        iconTopRight.src = 'icons/red-heart.png';
-        iconTopRight.id = 'iconTopRight';
-
-        var iconBottomRight = document.createElement("img");
-        iconBottomRight.src = 'icons/red-heart.png';
-        iconBottomRight.id = 'iconBottomRight';
-
-        var iconBottomLeft = document.createElement("img");
-        iconBottomLeft.src = 'icons/red-heart.png';
-        iconBottomLeft.id = 'iconBottomLeft';
-
-        img.src = legend[0].imgUrl;
-        img.id = 'cardFace';
-        playCard.appendChild(img);
-        playCard.appendChild(iconBottomLeft);
-        playCard.appendChild(iconBottomRight);
-        playCard.appendChild(iconTopLeft);
-        playCard.appendChild(iconTopRight);
-        
-
-        var src = document.getElementById("main");
-        src.appendChild(playCard);
-        
-
-    
-    
   }
 // Send request
 request.send();
