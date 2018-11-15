@@ -1,10 +1,51 @@
+#main{  
+   
+ }
+.score_layout{
+    width:100vw;
+    height:10vh;
+    background-color: purple;
+    
+}
+#dealer_layout{
+    width: 70vw;
+    height: 45vh;
+    background-color: red;
+}
+#player_layout{
+    width:70vw;
+    height:45vh;
+    background-color: black;
+}
+#legend_layout{
+    width:30vw;
+    height:90vh;
+    float:right;
+    background-color: blue;
+    border-width: 10px;
+    text-align: center;
+}
+#button_hit{
+    font-family: 'Monoton', cursive;
+    font-size: 2em;
+    margin: 700px 10% 0% 0%;
+    float: bottom;
+}
+#button_stay{
+    font-family: 'Monoton', cursive;
+    font-size: 2em;
+}
+
 #card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     border-radius: 5px;
     width: 220px;
     height: 300px;
-    border-color: red;
+    background-color: white;
+    margin: 20px 0 0 10px;
+    position: relative;
+    display: inline-block;
 }
 
 #cardFace {
@@ -41,31 +82,4 @@
     height:30px;
     position: absolute;
 
-}
-
-#main{  
-   
- }
-.score_layout{
-    width:100vw;
-    height:10vh;
-    background-color: purple;
-}
-#dealer_layout{
-    width: 70vw;
-    height: 45vh;
-    background-color: red;
-}
-#player_layout{
-    width:70vw;
-    height:45vh;
-    background-color: black;
-}
-#legend_layout{
-    width:30vw;
-    height:90vh;
-    float:right;
-    background-color: blue;
-    border-width: 10px;
-    text-align: center;
 }

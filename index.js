@@ -1,6 +1,6 @@
 
 
-var suits = ["Spades","Hearts","Diamonds","Club"];
+var suits = ["spade","heart","diamond","clover"];
 var values = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
 var deck = [];
 var legend = [];
@@ -30,42 +30,51 @@ function generatePlayers(num){
     }
 }
 
-function renderCard(card, player){
-        var hand = document.getElementById('hand_' + player);
-        hand.appendChild(getCardUI(card));
-    }
 
-function generateCardUI(imageSrc,icon){
+function clickHitMe(){
+    if(!gameEnded){
+        let curCard = deck.pop();
+        let curPlayer = players[1];
+        console.log(deck.length);
+        console.log(deck);
+        console.log(curCard);
+        curPlayer.Hand.push(curCard);
+        generateCardUI(curCard,"dealer_layout");
+    }
+}
+
+
+function generateCardUI(card,layout){
         var playCard = document.createElement("div");
         playCard.id = 'card';
+        console.log(card);
 
         var img = document.createElement("img");
         var iconTopLeft = document.createElement("img");
-        iconTopLeft.src = 'icons/red-heart.png';
+        iconTopLeft.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconTopLeft.id = 'iconTopLeft';
 
         var iconTopRight = document.createElement("img");
-        iconTopRight.src = 'icons/red-heart.png';
+        iconTopRight.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconTopRight.id = 'iconTopRight';
 
         var iconBottomRight = document.createElement("img");
-        iconBottomRight.src = 'icons/red-heart.png';
+        iconBottomRight.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconBottomRight.id = 'iconBottomRight';
 
         var iconBottomLeft = document.createElement("img");
-        iconBottomLeft.src = 'icons/red-heart.png';
+        iconBottomLeft.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconBottomLeft.id = 'iconBottomLeft';
 
-        img.src = legend[0].imgUrl;
+        img.src = card.Person.imgUrl;
         img.id = 'cardFace';
         playCard.appendChild(img);
         playCard.appendChild(iconBottomLeft);
         playCard.appendChild(iconBottomRight);
         playCard.appendChild(iconTopLeft);
         playCard.appendChild(iconTopRight);
-        
 
-        var src = document.getElementById("main");
+        var src = document.getElementById(layout);
         src.appendChild(playCard);
 }
 
@@ -105,13 +114,20 @@ function generateDeck(){
                 Suit: suits[j],
                 Weight: trueValue,
                 Person: legend[i],
+                Color: null,
         
             }
             //Add the card to the deck
             deck.push(card);
         }
     }
-
+    for(let z = 0; z < deck.length;z++){
+        if(deck[z].Suit == 'heart' || deck[z].Suit == 'diamond'){
+            deck[z].Color = 'red';
+        }else{
+            deck[z].Color = 'black';
+        }
+    }
 }
 
 
@@ -141,8 +157,12 @@ request.onload = function () {
     generateDeck();
     console.log("Deck Length: " + deck.length);
     console.log(deck);
-
+    generatePlayers(2);
+    console.log("Dealer: "+ players[0].Name + " Player: "+ players[1].Name);
+    //document.getElementById("button_hit").addEventListener("onclick", clickHitMe());
+    
   }
 // Send request
 request.send();
+
  
