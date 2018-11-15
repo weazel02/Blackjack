@@ -112,22 +112,31 @@ function clickStay(){
                 playerScoreA += card.Weight[0];
             }
         }
-        if(playerScore < 22 && playerScore > dealerScore){
+        if(playerScore < 22 && dealerScore < 22 && playerScore>dealerScore){
             playerScoreTotal++;
-        }else{
-            dealerScoreTotal++;
+        }else if(playerScore<22 && dealerScore>22){
+            playerScoreTotal++;
+        }else{   
+            dealerScoreTotal++;         
         }
-        console.log("Player Hand Value: " + playerScore+ " Player Score: "+ playerScoreTotal + " Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+        document.getElementById("player_score").innerHTML = "Player Score: "+ playerScoreTotal;
+        document.getElementById("dealer_score").innerHTML = "Dealer Score: " +dealerScoreTotal;
+        
+        console.log("Player Hand Value: " + playerScore+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
         removeCardsUI();
     }
 }
 function removeCardsUI(){
-    for( element of dealerCardElements){
-        element.parentNode.removeChild(element);
+    for(var i = dealerCardElements.length - 1; i >= 0; i--){
+        dealerCardElements[i].parentNode.removeChild(dealerCardElements[i]);
+        dealerCardElements.pop();
     }
-    for( element of playerCardElements){
-        element.parentNode.removeChild(element);
+    for(var a = playerCardElements.length - 1; a >= 0; a--){
+        playerCardElements[a].parentNode.removeChild(playerCardElements[a]);
+        playerCardElements.pop();
     }
+    
+    hasHitMe = false;
 }
 
 
