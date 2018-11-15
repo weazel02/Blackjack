@@ -10,6 +10,24 @@ var players = new Array();
 
 var gameEnded = false;
 var hasHitMe = false;
+var dealerScoreTotal = 0;
+var playerScoreTotal = 0;
+var dealerCardElements = [];
+var playerCardElements = [];
+
+
+function shuffle(){
+        // for 1000 turns
+        // switch the values of two random cards
+    for (var i = 0; i < 1000; i++){
+        var location1 = Math.floor((Math.random() * deck.length));
+        var location2 = Math.floor((Math.random() * deck.length));
+        var tmp = deck[location1];
+
+        deck[location1] = deck[location2];
+        deck[location2] = tmp;
+    }
+}
 
 function generatePlayers(num){
     for (let k = 0; k < num; k++){
@@ -31,7 +49,6 @@ function generatePlayers(num){
     }
 }
 
-
 function clickHitMe(){
     if(!gameEnded){
         if(hasHitMe){
@@ -49,7 +66,6 @@ function clickHitMe(){
             let playerSecondCard = deck.pop();
             console.log(playerFirstCard);
             for(let player of players){
-                console.log(player);
                 if(player.Name == 'Dealer'){
                     player.Hand = new Array();
                     player.Hand.push(dealerFirstCard);
@@ -69,50 +85,51 @@ function clickHitMe(){
     }
 }
 function clickStay(){
-    let playerScore = 0;
-    let playerScoreA = 0;
-    let dealerScore = 0;
-    
-    let dealer = players[0];
+    if(!gameEnded && hasHitMe){
+        let playerScore = 0;
+        let playerScoreA = 0;
+        let dealerScore = 0;
+        
+        let dealer = players[0];
+        let curPlayer = players[1];
 
-    for(let card in players[0].Hand){
-        dealerScore+=card.Weight[0];
-    }
-    while(dealerScore<=17){
-        let curCard = deck.pop();
-        let curPlayer = players[0];
-        dealerScore+= curCard.Weight[0];
-        curPlayer.Hand.push(curCard);
-        generateCardUI(curCard,"dealer_layout");
-    }
-    /*
-    if(!gameEnded){
-        for(let i = 0; i<players.length; i++){
-            for(let z of players[i].Hand){
-                if(players[i].Name == "Player"){
-                    if(z.Weight.length == 2){
-                        playerScore += z.Weight[0];
-                        playerScoreA += z.Weight[1];
-                    }else{
-                        playerScore += z.Weight[0];
-                        playerScore += z.Weight[0];
-                    }
-                }
-                if(players[i].Name == "Dealer"){
-                    if(z.Weight.length == 2){
-                        dealerScore += z.Weight[0];
-                        dealerScoreA += z.Weight[1];
-                    }else{
-                        dealerScore += z.Weight[0];
-                        dealerScore += z.Weight[0];
-                    }
-                }
+        for(let card of dealer.Hand){
+            dealerScore+=card.Weight[0];
+        }
+        while(dealerScore<=17){
+            let curCard = deck.pop();
+            dealerScore+= curCard.Weight[0];
+            dealer.Hand.push(curCard);
+            generateCardUI(curCard,"dealer_layout");
+        }
+        for(let card of curPlayer.Hand){
+            if(card.Weight.length == 2){
+                playerScore += card.Weight[0];
+                playerScoreA += card.Weight[1];
+            }
+            else{
+                playerScore += card.Weight[0];
+                playerScoreA += card.Weight[0];
             }
         }
-
+        if(playerScore < 22 && playerScore > dealerScore){
+            playerScoreTotal++;
+        }else{
+            dealerScoreTotal++;
+        }
+        console.log("Player Hand Value: " + playerScore+ " Player Score: "+ playerScoreTotal + " Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+        removeCardsUI();
     }
-    */
 }
+function removeCardsUI(){
+    for( element of dealerCardElements){
+        element.parentNode.removeChild(element);
+    }
+    for( element of playerCardElements){
+        element.parentNode.removeChild(element);
+    }
+}
+
 
 
 function generateCardUI(card,layout){
@@ -147,6 +164,12 @@ function generateCardUI(card,layout){
 
         var src = document.getElementById(layout);
         src.appendChild(playCard);
+        if(layout == "dealer_layout"){
+            dealerCardElements.push(playCard);
+        }
+        if(layout == "player_layout"){
+            playerCardElements.push(playCard);
+        }
 }
 
 
@@ -202,6 +225,7 @@ function generateDeck(){
             deck[z].Color = 'black';
         }
     }
+    shuffle();
 }
 
 
