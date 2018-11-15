@@ -9,19 +9,20 @@ var employeeList = [];
 var players = new Array();
 
 var gameEnded = false;
+var hasHitMe = false;
 
 function generatePlayers(num){
     for (let k = 0; k < num; k++){
         if(k == 0){
             var player = {
-                Hand: [],
+                Hand: new Array(),
                 Score: 0,
                 Name: 'Dealer'
             }
             players.push(player);
         }else{
             var player = {
-                Hand: [],
+                Hand: new Array(),
                 Score: 0,
                 Name: 'Player'
             }
@@ -33,14 +34,84 @@ function generatePlayers(num){
 
 function clickHitMe(){
     if(!gameEnded){
+        if(hasHitMe){
+            let curCard = deck.pop();
+            let curPlayer = players[1];
+            console.log(deck.length);
+            console.log(deck);
+            console.log(curCard);
+            curPlayer.Hand.push(curCard);
+            generateCardUI(curCard,"player_layout");
+        }else{
+            let dealerFirstCard = deck.pop();
+            let playerFirstCard = deck.pop();
+            let dealerSecondCard = deck.pop();
+            let playerSecondCard = deck.pop();
+            console.log(playerFirstCard);
+            for(let player of players){
+                console.log(player);
+                if(player.Name == 'Dealer'){
+                    player.Hand = new Array();
+                    player.Hand.push(dealerFirstCard);
+                    player.Hand.push(dealerSecondCard);
+                }else{
+                    player.Hand = new Array();
+                    player.Hand.push(playerFirstCard);
+                    player.Hand.push(playerSecondCard);
+                }
+            }
+            generateCardUI(dealerFirstCard,"dealer_layout");
+            generateCardUI(dealerSecondCard,"dealer_layout");
+            generateCardUI(playerFirstCard,"player_layout");
+            generateCardUI(playerSecondCard,"player_layout");
+            hasHitMe = true;
+        }
+    }
+}
+function clickStay(){
+    let playerScore = 0;
+    let playerScoreA = 0;
+    let dealerScore = 0;
+    
+    let dealer = players[0];
+
+    for(let card in players[0].Hand){
+        dealerScore+=card.Weight[0];
+    }
+    while(dealerScore<=17){
         let curCard = deck.pop();
-        let curPlayer = players[1];
-        console.log(deck.length);
-        console.log(deck);
-        console.log(curCard);
+        let curPlayer = players[0];
+        dealerScore+= curCard.Weight[0];
         curPlayer.Hand.push(curCard);
         generateCardUI(curCard,"dealer_layout");
     }
+    /*
+    if(!gameEnded){
+        for(let i = 0; i<players.length; i++){
+            for(let z of players[i].Hand){
+                if(players[i].Name == "Player"){
+                    if(z.Weight.length == 2){
+                        playerScore += z.Weight[0];
+                        playerScoreA += z.Weight[1];
+                    }else{
+                        playerScore += z.Weight[0];
+                        playerScore += z.Weight[0];
+                    }
+                }
+                if(players[i].Name == "Dealer"){
+                    if(z.Weight.length == 2){
+                        dealerScore += z.Weight[0];
+                        dealerScoreA += z.Weight[1];
+                    }else{
+                        dealerScore += z.Weight[0];
+                        dealerScore += z.Weight[0];
+                    }
+                }
+            }
+        }
+
+    }
+    */
 }
 
 
@@ -96,12 +167,15 @@ function generateDeck(){
             var trueValue = values[i];
             //If not a face card/A store numerical value 
             if(trueValue!='J'&& trueValue!='Q' && trueValue!='K'&& trueValue!='A'){
-                trueValue  = parseInt(values[i]);
+                tempValue  = parseInt(values[i]);
+                trueValue = new Array();
+                trueValue.push(tempValue);
+                
             }
             //If face card assign value of ten, if A have a choice between 1 or 11
             else{
                 if(trueValue == 'J' || trueValue == 'Q' || trueValue == 'K'){
-                    trueValue = 10;
+                    trueValue = [10];
                     console.log("TrueValue: "+ trueValue);
                 }
                 if(trueValue == 'A'){
