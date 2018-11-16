@@ -36,6 +36,9 @@ const waitForLoad = async () => {
     await sleep(4000)
     removeCardsUI();
   }
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
 
 /*Generation Function*/
 /*Create and add players to the players array, dealer is player[0]*/
@@ -312,7 +315,7 @@ request.onload = function () {
     console.log(deck);
     generatePlayers(2);
     console.log("Dealer: "+ players[0].Name + " Player: "+ players[1].Name);
-    generateLegend();
+    renderLegend();
     //document.getElementById("button_hit").addEventListener("onclick", clickHitMe());
     
   }
