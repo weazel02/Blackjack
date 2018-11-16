@@ -1,26 +1,27 @@
+/*
+Created by: Wesley Thompson
+Employee Blackjack: A simple memorization game inspired by the rules of Blackjack
+*/
+var suits = ["spade","heart","diamond","clover"]; /*Suits array used for deck building*/
+var values = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"]; /*Value array used for deck building*/
+var deck = []; /*Array to store our deck*/
+var legend = []; /*Array for generating legend ui*/
+var employeeList = []; /*Array of employee objects*/
+var players = new Array(); /*Array of player, players[0] is the dealer*/
+var gameEnded = false; /*Boolean used to maintain game state*/
+var hasHitMe = false; /*Boolean used to maintain game state*/
+var dealerScoreTotal = 0; /*Dealers number of wins*/
+var playerScoreTotal = 0; /*Player number of wins*/ 
+var dealerCardElements = [];/*Array holding dom elements for dealer*/ 
+var playerCardElements = [];/*Array holding dom elements for player*/ 
+var cheatsEnabled = false;/*Boolean for maintaing game state*/ 
 
+/*Toolkit Functions*/ 
 
-var suits = ["spade","heart","diamond","clover"];
-var values = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
-var deck = [];
-var legend = [];
-var legendSuit = [];
-var employeeList = [];
-//By default the dealer is player[0]
-var players = new Array();
-
-var gameEnded = false;
-var hasHitMe = false;
-var dealerScoreTotal = 0;
-var playerScoreTotal = 0;
-var dealerCardElements = [];
-var playerCardElements = [];
-var cheatsEnabled = false;
-
-
+/*Function to shuffle the global deck*/ 
 function shuffle(){
-        // for 1000 turns
-        // switch the values of two random cards
+    // for 1000 turns
+    // switch the values of two random cards
     for (var i = 0; i < 1000; i++){
         var location1 = Math.floor((Math.random() * deck.length));
         var location2 = Math.floor((Math.random() * deck.length));
@@ -30,7 +31,14 @@ function shuffle(){
         deck[location2] = tmp;
     }
 }
+/*Async function used to temporarily sleep the UI and then remove unnecessary card elements */
+const waitForLoad = async () => {
+    await sleep(4000)
+    removeCardsUI();
+  }
 
+/*Generation Function*/
+/*Create and add players to the players array, dealer is player[0]*/
 function generatePlayers(num){
     for (let k = 0; k < num; k++){
         if(k == 0){
@@ -51,9 +59,11 @@ function generatePlayers(num){
     }
 }
 
-function generateLegend(){
+/*Function for rendering legend UI*/
+function renderLegend(){
     for(person of legend){
         if(!cheatsEnabled){
+        //Get the legend DOM element and append with with the current employee's name/weight 
         var leg = document.getElementById("legend");
         var name = person.firstName +" "+person.lastName + ": "+ person.cardValue;
         var nameElement = document.createElement("div");
@@ -63,10 +73,11 @@ function generateLegend(){
         }
     }
 }
-
+/* Function that handles the logic for when Hit Me is clicked */
 function clickHitMe(){
     if(!gameEnded){
         if(hasHitMe){
+            //Get the card on the top of the deck and render it for the player if they have hit before
             let curCard = deck.pop();
             let curPlayer = players[1];
             console.log(deck.length);
@@ -75,11 +86,12 @@ function clickHitMe(){
             curPlayer.Hand.push(curCard);
             generateCardUI(curCard,"player_layout");
         }else{
+            //If they have not hit before then the dealer and the player get 2 cards each 
             let dealerFirstCard = deck.pop();
             let playerFirstCard = deck.pop();
             let dealerSecondCard = deck.pop();
             let playerSecondCard = deck.pop();
-            console.log(playerFirstCard);
+            //Add the cards to the players hands
             for(let player of players){
                 if(player.Name == 'Dealer'){
                     player.Hand = new Array();
@@ -91,6 +103,7 @@ function clickHitMe(){
                     player.Hand.push(playerSecondCard);
                 }
             }
+            //Render all the cards 
             generateCardUI(dealerFirstCard,"dealer_layout");
             generateCardUI(dealerSecondCard,"dealer_layout");
             generateCardUI(playerFirstCard,"player_layout");
@@ -99,9 +112,7 @@ function clickHitMe(){
         }
     }
 }
-const sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-  }
+
 function clickStay(){
     if(!gameEnded && hasHitMe){
         document.getElementById("button_hit").disabled = true;
@@ -147,14 +158,11 @@ function clickStay(){
         
         console.log("Player Hand Value: " + playerScore+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
         
-        doSomething();
+        waitForLoad();
     }
 }
 
-const doSomething = async () => {
-    await sleep(4000)
-    removeCardsUI();
-  }
+
   
 function removeCardsUI(){
     for(var i = dealerCardElements.length - 1; i >= 0; i--){

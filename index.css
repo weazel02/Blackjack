@@ -13,7 +13,7 @@ body{
  }
  #title_subtext{
     width:100vw;
-    height:5vh;
+    height:2vh;
     background-color: white;
     background: rgba(255,255,255,.4);
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -23,7 +23,7 @@ body{
  }
  #title_text{
     width:100vw;
-    height:10vh;
+    height:8vh;
     background-color: white;
     background: rgba(255,255,255,.4);
     text-align: center;
