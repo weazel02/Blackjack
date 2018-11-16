@@ -11,21 +11,26 @@
 </head>
 <body id="main">
     <div id="title_text">Employee Blackjack</div>
+    <div id="title_subtext">First to 5 Wins!</div>
       
     </div>
     <div id="legend_layout">
             <div id = "dealer_score">
-                    Dealer Score: 
+                    Dealer Score: 0
                 </div>
                 <div id = "player_score">
-                    Player Score: 
+                    Player Score: 0
                 </div>
                 <div id="legend"></div>
         <button id="button_hit" onclick="clickHitMe()">HIT ME</button>
         <button id="button_stay" onclick = "clickStay()">STAY</button>
     </div>
-    <div id="dealer_layout"></div>
-    <div id="player_layout"></div>
+    <div id="dealer_layout">
+        <div id="dealer_title">Dealer Hand Value: </div>
+    </div>
+    <div id="player_layout">
+            <div id="player_title">Player Hand Value:</div>
+    </div>
    
 </body>
 <script src = "index.js"></script>

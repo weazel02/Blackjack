@@ -58,6 +58,7 @@ function generateLegend(){
         var name = person.firstName +" "+person.lastName + ": "+ person.cardValue;
         var nameElement = document.createElement("div");
         nameElement.innerHTML = name;
+        nameElement.className = "legend_element"
         leg.appendChild(nameElement);
         }
     }
@@ -98,8 +99,13 @@ function clickHitMe(){
         }
     }
 }
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
 function clickStay(){
     if(!gameEnded && hasHitMe){
+        document.getElementById("button_hit").disabled = true;
+        document.getElementById("button_stay").disabled = true;
         let playerScore = 0;
         let playerScoreA = 0;
         let dealerScore = 0;
@@ -133,13 +139,23 @@ function clickStay(){
         }else{   
             dealerScoreTotal++;         
         }
-        document.getElementById("player_score").innerHTML = "Player Score: "+ playerScoreTotal;
-        document.getElementById("dealer_score").innerHTML = "Dealer Score: " +dealerScoreTotal;
+        document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+        document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+        document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+        document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore;
+        
         
         console.log("Player Hand Value: " + playerScore+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
-        removeCardsUI();
+        
+        doSomething();
     }
 }
+
+const doSomething = async () => {
+    await sleep(4000)
+    removeCardsUI();
+  }
+  
 function removeCardsUI(){
     for(var i = dealerCardElements.length - 1; i >= 0; i--){
         dealerCardElements[i].parentNode.removeChild(dealerCardElements[i]);
@@ -149,6 +165,10 @@ function removeCardsUI(){
         playerCardElements[a].parentNode.removeChild(playerCardElements[a]);
         playerCardElements.pop();
     }
+    document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: ";
+    document.getElementById("player_title").innerHTML = "Player Hand Value: ";
+    document.getElementById("button_hit").disabled = false;
+    document.getElementById("button_stay").disabled = false;
     
     hasHitMe = false;
 }
@@ -276,6 +296,7 @@ request.onload = function () {
       cardValue: null
       }
       //Add the Employee object to the employeeList 
+      if(typeof(employee.imgUrl)!= 'undefined')
       employeeList.push(employee);
     });
     generateDeck();
