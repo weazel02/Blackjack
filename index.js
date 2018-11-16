@@ -4,6 +4,7 @@ var suits = ["spade","heart","diamond","clover"];
 var values = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
 var deck = [];
 var legend = [];
+var legendSuit = [];
 var employeeList = [];
 //By default the dealer is player[0]
 var players = new Array();
@@ -14,6 +15,7 @@ var dealerScoreTotal = 0;
 var playerScoreTotal = 0;
 var dealerCardElements = [];
 var playerCardElements = [];
+var cheatsEnabled = false;
 
 
 function shuffle(){
@@ -45,6 +47,18 @@ function generatePlayers(num){
                 Name: 'Player'
             }
             players.push(player);
+        }
+    }
+}
+
+function generateLegend(){
+    for(person of legend){
+        if(!cheatsEnabled){
+        var leg = document.getElementById("legend");
+        var name = person.firstName +" "+person.lastName + ": "+ person.cardValue;
+        var nameElement = document.createElement("div");
+        nameElement.innerHTML = name;
+        leg.appendChild(nameElement);
         }
     }
 }
@@ -150,11 +164,12 @@ function generateCardUI(card,layout){
         var iconTopLeft = document.createElement("img");
         iconTopLeft.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconTopLeft.id = 'iconTopLeft';
-
+        
         var iconTopRight = document.createElement("img");
         iconTopRight.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconTopRight.id = 'iconTopRight';
-
+        
+    
         var iconBottomRight = document.createElement("img");
         iconBottomRight.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconBottomRight.id = 'iconBottomRight';
@@ -162,7 +177,7 @@ function generateCardUI(card,layout){
         var iconBottomLeft = document.createElement("img");
         iconBottomLeft.src = 'icons/' +  card.Color + "-" + card.Suit + '.png';
         iconBottomLeft.id = 'iconBottomLeft';
-
+        
         img.src = card.Person.imgUrl;
         img.id = 'cardFace';
         playCard.appendChild(img);
@@ -197,6 +212,7 @@ function generateDeck(){
         for(let j = 0; j < suits.length; j++){
             //Grab the current variable for testing
             var trueValue = values[i];
+            legend[i].cardValue = trueValue;
             //If not a face card/A store numerical value 
             if(trueValue!='J'&& trueValue!='Q' && trueValue!='K'&& trueValue!='A'){
                 tempValue  = parseInt(values[i]);
@@ -256,7 +272,8 @@ request.onload = function () {
       firstName: per.firstName,
       lastName: per.lastName,
       jobTitle: per.jobTitle,
-      imgUrl: per.headshot.url
+      imgUrl: per.headshot.url,
+      cardValue: null
       }
       //Add the Employee object to the employeeList 
       employeeList.push(employee);
@@ -266,6 +283,7 @@ request.onload = function () {
     console.log(deck);
     generatePlayers(2);
     console.log("Dealer: "+ players[0].Name + " Player: "+ players[1].Name);
+    generateLegend();
     //document.getElementById("button_hit").addEventListener("onclick", clickHitMe());
     
   }

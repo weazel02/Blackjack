@@ -1,35 +1,62 @@
+body{
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
 #main{  
-    font-family: 'Monoton', cursive;
+    font-family: 'Courier New', Courier, monospace;
+    background-image: url('icons/index_background.jpg');
+    width:100%;
+    height: 100%;
+    background-color: gray;
+    position: fixed;
+    
+ }
+ #title_text{
+    width:100vw;
+    height:10vh;
+    background-color: white;
+    background: rgba(255,255,255,.4);
+    text-align: center;
+    font-family: fantasy;
+    font-size: 3em;
+
+
  }
 .score_layout{
     width:100vw;
     height:10vh;
     background-color: white;
-    
+    background: rgba(255,255,255,.4);
 }
 #dealer_layout{
-    width: 70vw;
+    width: 80vw;
     height: 45vh;
     background-color: red;
+    padding: 0 0 0 1vh;
+    background: rgba(0,0,0,.2);
 }
 #player_layout{
-    width:70vw;
+    width:80vw;
     height:45vh;
     background-color: black;
+    padding: 0 0 0 1vh;
+    background: rgba(255,0,0,.2);
+    
 }
 #legend_layout{
-    width:30vw;
+    width:20vw;
     height:90vh;
     float:right;
     background-color: blue;
     border-width: 10px;
     text-align: center;
+    background: rgba(255,255,255,.2);
 }
 #button_hit{
     font-family: 'Monoton', cursive;
     font-size: 2em;
-    margin: 700px 10% 0% 0%;
-    float: bottom;
+    margin: 75vh 1vw 0 0;
+    position: relative;
 }
 #button_stay{
     font-family: 'Monoton', cursive;
@@ -40,49 +67,54 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     border-radius: 5px;
-    width: 220px;
-    height: 300px;
+    width: 12vw;
+    height: 30vh;
     background-color: white;
-    margin: 20px 0 0 10px;
+    margin: 6vh 0 0 1vh;
     position: relative;
     display: inline-block;
+    background: rgba(255,255,255,1);
 }
 
 #cardFace {
-    border-radius: 5px 5px 0 0;
-    margin: 100px 60px 100px 60px;
-    width: 100px;
-    height: 100px;
+    margin: 8.5vh 0 0 2.7vw;
+    width: 6vw;
+    height: 10vh;
     position: absolute;
 
 }
+
 #iconTopLeft{
-    margin: 10px 140px 0px 10px;
-    width:30px;
-    height:30px;
+    margin: 1vh 0 0 1vw;
+    width:3vh;
+    height:3vh;
     position: absolute;
 
 }
+
 #iconTopRight{
-    margin: 10px 10px 0px 180px;
-    width:30px;
-    height:30px;
+    margin: 1vh 0 0 9vw;
+    width:3vh;
+    height:3vh;
     position: absolute;
+}
 
-}
-#iconBottomRight{
-    margin: 260px 10px 10px 180px;
-    width:30px;
-    height:30px;
-    position: absolute;
-}
 #iconBottomLeft{
-    margin: 260px 0px 10px 10px;
-    width:30px;
-    height:30px;
+    margin:26vh 0 0 1vw;
+    width:3vh;
+    height:3vh;
+    position: absolute;
+}
+
+#iconBottomRight{
+    margin: 26vh 0 0 9vw;
+    width:3vh;
+    height:3vh;
     position: absolute;
 
 }
+
+
 #player_score{
 
 }
