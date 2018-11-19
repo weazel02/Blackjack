@@ -15,6 +15,10 @@ var playerScoreTotal = 0; /*Player number of wins*/
 var dealerCardElements = [];/*Array holding dom elements for dealer*/ 
 var playerCardElements = [];/*Array holding dom elements for player*/ 
 var cheatsEnabled = false;/*Boolean for maintaing game state*/ 
+var scoreToWin = 5; /*Score necesary to determine a winner*/
+var hasBusted = false; /*Boolean used to see if the player has busted*/
+var numDecks = 2; /* The number of decks you wish to play with*/
+var numPlayers = 2; /*The number of players.... keep at 2 please*/
 
 /*Toolkit Functions*/ 
 
@@ -33,13 +37,15 @@ function shuffle(){
 }
 /*Async function used to temporarily sleep the UI and then remove unnecessary card elements */
 const waitForLoad = async () => {
-    await sleep(4000)
+    await sleep(2000)
     removeCardsUI();
   }
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
-
+const waitFor = async(time) =>{
+    await(2000);
+}
 /*Generation Function*/
 /*Create and add players to the players array, dealer is player[0]*/
 function generatePlayers(num){
@@ -76,6 +82,48 @@ function renderLegend(){
         }
     }
 }
+/* Function used to see if the player has busted*/
+function checkForBust(){
+    //Set up our initial scores
+    let playerScore = 0;
+    let playerScoreA = 0;
+    let curPlayer = players[1];
+
+    //Iterate through the player's hand and calculate his score with/without an Ace
+    for(let card of curPlayer.Hand){
+        if(card.Weight.length == 2){
+            playerScore += card.Weight[0];
+            playerScoreA += card.Weight[1];
+        }
+        else{
+            playerScore += card.Weight[0];
+            playerScoreA += card.Weight[0];
+        }
+    }
+    //Check to see if the player busted
+    if(playerScore > 21 && playerScoreA >21){
+        hasBusted = true;
+    }
+}
+function hasGameEnded(){
+    if(playerScoreTotal == scoreToWin || dealerScoreTotal == scoreToWin){
+        waitFor(2000);
+        gameEnded = true;
+        console.log("GAME ENDED");
+        document.getElementById("button_hit").disabled = true;
+        document.getElementById("button_stay").disabled = true;
+        if(playerScoreTotal>dealerScoreTotal){
+        document.getElementById("title_subtext").innerHTML = "You are the Winner!";
+        document.getElementById("player_layout").innerHTML = "";
+        document.getElementById("dealer_layout").innerHTML = "";
+
+        }else{
+            document.getElementById("title_subtext").innerHTML = "The Dealer Won!";
+            document.getElementById("player_layout").innerHTML = "";
+            document.getElementById("dealer_layout").innerHTML = "";
+        }
+    }
+}
 /* Function that handles the logic for when Hit Me is clicked */
 function clickHitMe(){
     if(!gameEnded){
@@ -88,6 +136,11 @@ function clickHitMe(){
             console.log(curCard);
             curPlayer.Hand.push(curCard);
             generateCardUI(curCard,"player_layout");
+            checkForBust();
+            if(hasBusted){
+                clickStay();
+                hasBusted = false;
+            }
         }else{
             //If they have not hit before then the dealer and the player get 2 cards each 
             let dealerFirstCard = deck.pop();
@@ -123,6 +176,7 @@ function clickStay(){
         let playerScore = 0;
         let playerScoreA = 0;
         let dealerScore = 0;
+        let handWithAWon = false;
         
         let dealer = players[0];
         let curPlayer = players[1];
@@ -130,11 +184,13 @@ function clickStay(){
         for(let card of dealer.Hand){
             dealerScore+=card.Weight[0];
         }
-        while(dealerScore<=17){
-            let curCard = deck.pop();
-            dealerScore+= curCard.Weight[0];
-            dealer.Hand.push(curCard);
-            generateCardUI(curCard,"dealer_layout");
+        if(!hasBusted){
+            while(dealerScore<=17){
+                let curCard = deck.pop();
+                dealerScore+= curCard.Weight[0];
+                dealer.Hand.push(curCard);
+                generateCardUI(curCard,"dealer_layout");
+            }
         }
         for(let card of curPlayer.Hand){
             if(card.Weight.length == 2){
@@ -148,20 +204,90 @@ function clickStay(){
         }
         if(playerScore < 22 && dealerScore < 22 && playerScore>dealerScore){
             playerScoreTotal++;
-        }else if(playerScore<22 && dealerScore>22){
+            document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+            document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+            document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+            document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Won!";
+            console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+        }else if(playerScoreA < 22 && dealerScore < 22 && playerScoreA>dealerScore){
             playerScoreTotal++;
-        }else{   
-            dealerScoreTotal++;         
+            document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+            document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+            document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+            document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Won!";
+            console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
         }
-        document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
-        document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
-        document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
-        document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore;
-        
-        
-        console.log("Player Hand Value: " + playerScore+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
-        
-        waitForLoad();
+        else if(playerScore<22 && dealerScore>22){
+            playerScoreTotal++;
+            document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+            document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+            document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+            document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Won!";
+            console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+        }
+        else if(playerScoreA<22 && dealerScore>22){
+            document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+            document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+            document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+            document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Won!";
+            console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+            playerScoreTotal++;
+        }else if(playerScore == 21 && dealerScore == 21){   
+            dealerScoreTotal++;
+            document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+            document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+            document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+            document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Lost!";
+            console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);         
+        }else if(playerScoreA == 21 && dealerScore == 21){   
+            dealerScoreTotal++;   
+            document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+            document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+            document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+            document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Lost!";
+            console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+        }else if(playerScore == dealerScore){
+            if(dealer.Hand.length>=curPlayer.Hand.length){
+                dealerScoreTotal++;
+                document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+                document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+                document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Lost!";
+                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+            }else{
+                playerScoreTotal++;
+                document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+                document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+                document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Won!";
+                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+            }
+        } else if(playerScoreA == dealerScore){
+            if(dealer.Hand.length>=curPlayer.Hand.length){
+                dealerScoreTotal++;
+                document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+                document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+                document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Lost!";
+                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+            }else{
+                playerScoreTotal++;
+                document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+                document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+                document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Won!";
+                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+            }
+        }     
+        else{
+            dealerScoreTotal++;
+            document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
+            document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
+            document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
+            document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Lost!";
+            console.log("Player Hand Value: " + playerScore+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
+        }
+    waitForLoad().then(hasGameEnded);
     }
 }
 
@@ -228,62 +354,81 @@ function generateCardUI(card,layout){
 }
 
 
-function generateDeck(){
-    //Get 13 random employees
-    for(let z = 0; z < values.length; z++){
-        var min = 0;
-        var max = employeeList.length;
-        var random = Math.floor(Math.random() * (+max - +min)) + +min;
-        //console.log("Min: "+ min + " Max: "+ max+ " Random: " +random);
-        legend[z] = employeeList[random];
-    }
-    //console.log(legend);
-    //Iterate through our suits/values arrays
-    for(let i = 0; i < values.length; i++){
-        for(let j = 0; j < suits.length; j++){
-            //Grab the current variable for testing
-            var trueValue = values[i];
-            legend[i].cardValue = trueValue;
-            //If not a face card/A store numerical value 
-            if(trueValue!='J'&& trueValue!='Q' && trueValue!='K'&& trueValue!='A'){
-                tempValue  = parseInt(values[i]);
-                trueValue = new Array();
-                trueValue.push(tempValue);
-                
-            }
-            //If face card assign value of ten, if A have a choice between 1 or 11
-            else{
-                if(trueValue == 'J' || trueValue == 'Q' || trueValue == 'K'){
-                    trueValue = [10];
-                    console.log("TrueValue: "+ trueValue);
-                }
-                if(trueValue == 'A'){
-                    trueValue = [1,11];
+function generateDeck(numOfDecks){
+    let i = 0;
+    while(i < numOfDecks){
+        //Get 13 random employees
+        let z = 0;
+        var sameEmployee = false;
+        while(legend.length<values.length){
+            console.log(legend.length);
+            var min = 0;
+            var max = employeeList.length;
+            var random = Math.floor(Math.random() * (+max - +min)) + +min;
+            //console.log("Min: "+ min + " Max: "+ max+ " Random: " +random);
+            for(let a = 0; a < legend.length; a++){
+                if(legend[a].id==employeeList[random].id){
+                    console.log("SAME EMPLOYEE" + legend[a].id + "  --- "+ employeeList[random].id);
+                    sameEmployee = true;
+                    continue;
                 }
             }
-            //Create a card object with the suit,value,weight,employee
-            var card = {
-                Value: values[i],
-                Suit: suits[j],
-                Weight: trueValue,
-                Person: legend[i],
-                Color: null,
-        
+            if(!sameEmployee){
+            legend[z] = employeeList[random];
+            z++;
+            }else{
+                sameEmployee = false;
+                continue;
             }
-            //Add the card to the deck
-            deck.push(card);
         }
-    }
-    for(let z = 0; z < deck.length;z++){
-        if(deck[z].Suit == 'heart' || deck[z].Suit == 'diamond'){
-            deck[z].Color = 'red';
-        }else{
-            deck[z].Color = 'black';
+        console.log(legend);
+        //Iterate through our suits/values arrays
+        for(let i = 0; i < values.length; i++){
+            for(let j = 0; j < suits.length; j++){
+                //Grab the current variable for testing
+                var trueValue = values[i];
+                legend[i].cardValue = trueValue;
+                //If not a face card/A store numerical value 
+                if(trueValue!='J'&& trueValue!='Q' && trueValue!='K'&& trueValue!='A'){
+                    tempValue  = parseInt(values[i]);
+                    trueValue = new Array();
+                    trueValue.push(tempValue);
+                    
+                }
+                //If face card assign value of ten, if A have a choice between 1 or 11
+                else{
+                    if(trueValue == 'J' || trueValue == 'Q' || trueValue == 'K'){
+                        trueValue = [10];
+                        console.log("TrueValue: "+ trueValue);
+                    }
+                    if(trueValue == 'A'){
+                        trueValue = [1,11];
+                    }
+                }
+                //Create a card object with the suit,value,weight,employee
+                var card = {
+                    Value: values[i],
+                    Suit: suits[j],
+                    Weight: trueValue,
+                    Person: legend[i],
+                    Color: null,
+            
+                }
+                //Add the card to the deck
+                deck.push(card);
+            }
         }
+        for(let z = 0; z < deck.length;z++){
+            if(deck[z].Suit == 'heart' || deck[z].Suit == 'diamond'){
+                deck[z].Color = 'red';
+            }else{
+                deck[z].Color = 'black';
+            }
+        }
+        i++;
     }
     shuffle();
 }
-
 
 
 // Create a request variable and assign a new XMLHttpRequest object to it.
@@ -310,13 +455,12 @@ request.onload = function () {
       if(typeof(employee.imgUrl)!= 'undefined')
       employeeList.push(employee);
     });
-    generateDeck();
+    generateDeck(numDecks);
     console.log("Deck Length: " + deck.length);
     console.log(deck);
-    generatePlayers(2);
+    generatePlayers(numPlayers);
     console.log("Dealer: "+ players[0].Name + " Player: "+ players[1].Name);
     renderLegend();
-    //document.getElementById("button_hit").addEventListener("onclick", clickHitMe());
     
   }
 // Send request
