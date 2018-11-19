@@ -20,7 +20,13 @@ var hasBusted = false; /*Boolean used to see if the player has busted*/
 var numDecks = 2; /* The number of decks you wish to play with*/
 var numPlayers = 2; /*The number of players.... keep at 2 please*/
 
+
+
+/*************************************************************************/
+/*************************************************************************/
 /*Toolkit Functions*/ 
+/*************************************************************************/
+/*************************************************************************/
 
 /*Function to shuffle the global deck*/ 
 function shuffle(){
@@ -35,54 +41,33 @@ function shuffle(){
         deck[location2] = tmp;
     }
 }
+
+
 /*Async function used to temporarily sleep the UI and then remove unnecessary card elements */
 const waitForLoad = async () => {
     await sleep(2000)
     removeCardsUI();
   }
+
+
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
+
+
 /*General async function used whenever i want to make the browser wait for a given input*/
 const waitFor = async(time) =>{
     await(time);
 }
-/*Generation Function*/
-/*Create and add players to the players array, dealer is player[0]*/
-function generatePlayers(num){
-    for (let k = 0; k < num; k++){
-        if(k == 0){
-            var player = {
-                Hand: new Array(),
-                Score: 0,
-                Name: 'Dealer'
-            }
-            players.push(player);
-        }else{
-            var player = {
-                Hand: new Array(),
-                Score: 0,
-                Name: 'Player'
-            }
-            players.push(player);
-        }
-    }
-}
 
-/*Function for rendering legend UI*/
-function renderLegend(){
-    for(person of legend){
-        if(!cheatsEnabled){
-        //Get the legend DOM element and append with with the current employee's name/weight 
-        var leg = document.getElementById("legend");
-        var name = person.firstName +" "+person.lastName + ": "+ person.cardValue;
-        var nameElement = document.createElement("div");
-        nameElement.innerHTML = name;
-        nameElement.className = "legend_element"
-        leg.appendChild(nameElement);
-        }
-    }
-}
+
+/*************************************************************************/
+/*************************************************************************/
+/*Game State Functions*/
+/*************************************************************************/
+/*************************************************************************/
+
+
 /* Function used to see if the player has busted*/
 function checkForBust(){
     //Set up our initial scores
@@ -106,6 +91,8 @@ function checkForBust(){
         hasBusted = true;
     }
 }
+
+
 /*Function used to check if the game has ended... if so make some UI updates */
 function hasGameEnded(){
     if(playerScoreTotal == scoreToWin || dealerScoreTotal == scoreToWin){
@@ -126,6 +113,8 @@ function hasGameEnded(){
         }
     }
 }
+
+
 /* Function that handles the logic for when Hit Me is clicked */
 function clickHitMe(){
     if(!gameEnded){
@@ -167,6 +156,7 @@ function clickHitMe(){
         }
     }
 }
+
 //Funtion that creates the logic for when stay is clicked. Disables the buttons and calculates scores to determine a winner
 function clickStay(){
     if(!gameEnded && hasHitMe){
@@ -274,9 +264,6 @@ function clickStay(){
     }
 }
 
-
-
-
 /*Function used to remove the playing cards from both dealer/player layouts*/  
 function removeCardsUI(){
     for(var i = dealerCardElements.length - 1; i >= 0; i--){
@@ -292,6 +279,35 @@ function removeCardsUI(){
     document.getElementById("button_hit").disabled = false;
     document.getElementById("button_stay").disabled = false; 
     hasHitMe = false;
+}
+
+
+/*************************************************************************/
+/*************************************************************************/
+/*Generation Functions*/
+/*************************************************************************/
+/*************************************************************************/
+
+
+/*Create and add players to the players array, dealer is player[0]*/
+function generatePlayers(num){
+    for (let k = 0; k < num; k++){
+        if(k == 0){
+            var player = {
+                Hand: new Array(),
+                Score: 0,
+                Name: 'Dealer'
+            }
+            players.push(player);
+        }else{
+            var player = {
+                Hand: new Array(),
+                Score: 0,
+                Name: 'Player'
+            }
+            players.push(player);
+        }
+    }
 }
 
 
@@ -412,8 +428,26 @@ function generateDeck(numOfDecks){
         }
         i++;
     }
+    //Shuffle the deck
     shuffle();
 }
+
+
+/*Function for rendering legend UI*/
+function generateLegend(){
+    for(person of legend){
+        if(!cheatsEnabled){
+        //Get the legend DOM element and append with with the current employee's name/weight 
+        var leg = document.getElementById("legend");
+        var name = person.firstName +" "+person.lastName + ": "+ person.cardValue;
+        var nameElement = document.createElement("div");
+        nameElement.innerHTML = name;
+        nameElement.className = "legend_element"
+        leg.appendChild(nameElement);
+        }
+    }
+}
+
 
 /********************************************************************************/
 /*API request that setups the website*/
@@ -446,7 +480,7 @@ request.onload = function () {
     //Lets set up our decks and render our legend 
     generateDeck(numDecks);
     generatePlayers(numPlayers);
-    renderLegend();
+    generateLegend();
     
   }
 // Send request
