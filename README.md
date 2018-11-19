@@ -1,4 +1,4 @@
-#Blackjack
+# Blackjack
 A web based memorization game inspired by the rules of Blackjack!
 
 ToDo List:
@@ -10,17 +10,17 @@ ToDo List:
 5. Create game state logic 
 
 
-##How to Run:
+## How to Run:
 
 1. Download project files and enter the Blackjack directory
-2. `npm install http-server -g`
+2. `npm install http-server -g`  
 This will install http-server globally so that it may be run from the command line.
 3. `cd` into Black Jack directory
 4. Run `http-server` from the command line
 5. Navigate to http://localhost:8080  
 
-##Usage:
- `http-server [path] [options]`
+## Usage:
+ `http-server [path] [options]`  
 `[path]` defaults to ./public if the folder exists, and ./ otherwise.
 
 Now you can visit http://localhost:8080 to view your server
