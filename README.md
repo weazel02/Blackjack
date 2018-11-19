@@ -12,11 +12,11 @@ ToDo List:
 
 How to Run:
 
-1. Download project files
-2. npm install http-server -g
+1. Download project files and enter the Blackjack directory
+2. '''npm install http-server -g'''
 This will install http-server globally so that it may be run from the command line.
-3. cd into Black Jack
-4. Run http-server from the command line
+3. '''cd''' into Black Jack directory
+4. Run '''http-server''' from the command line
 5. Navigate to http://localhost:8080  
 
 Usage:

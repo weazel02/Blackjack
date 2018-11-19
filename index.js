@@ -43,8 +43,9 @@ const waitForLoad = async () => {
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
+/*General async function used whenever i want to make the browser wait for a given input*/
 const waitFor = async(time) =>{
-    await(2000);
+    await(time);
 }
 /*Generation Function*/
 /*Create and add players to the players array, dealer is player[0]*/
@@ -105,6 +106,7 @@ function checkForBust(){
         hasBusted = true;
     }
 }
+/*Function used to check if the game has ended... if so make some UI updates */
 function hasGameEnded(){
     if(playerScoreTotal == scoreToWin || dealerScoreTotal == scoreToWin){
         waitFor(2000);
@@ -131,9 +133,6 @@ function clickHitMe(){
             //Get the card on the top of the deck and render it for the player if they have hit before
             let curCard = deck.pop();
             let curPlayer = players[1];
-            console.log(deck.length);
-            console.log(deck);
-            console.log(curCard);
             curPlayer.Hand.push(curCard);
             generateCardUI(curCard,"player_layout");
             checkForBust();
@@ -168,22 +167,24 @@ function clickHitMe(){
         }
     }
 }
-
+//Funtion that creates the logic for when stay is clicked. Disables the buttons and calculates scores to determine a winner
 function clickStay(){
     if(!gameEnded && hasHitMe){
+        //Disbale buttons
         document.getElementById("button_hit").disabled = true;
         document.getElementById("button_stay").disabled = true;
+        //Set up variables for scoring
         let playerScore = 0;
         let playerScoreA = 0;
         let dealerScore = 0;
-        let handWithAWon = false;
-        
+        //Get our players
         let dealer = players[0];
         let curPlayer = players[1];
-
+        //Calculate the dealers hand value 
         for(let card of dealer.Hand){
             dealerScore+=card.Weight[0];
         }
+        //If the the player hasnt busted then the dealer draws until has hand is greater than 17
         if(!hasBusted){
             while(dealerScore<=17){
                 let curCard = deck.pop();
@@ -192,6 +193,7 @@ function clickStay(){
                 generateCardUI(curCard,"dealer_layout");
             }
         }
+        //Caculate the players hand value with/without and ace
         for(let card of curPlayer.Hand){
             if(card.Weight.length == 2){
                 playerScore += card.Weight[0];
@@ -202,6 +204,7 @@ function clickStay(){
                 playerScoreA += card.Weight[0];
             }
         }
+        //Else if chain determining who won the hand. Updates UI accordingly 
         if(playerScore < 22 && dealerScore < 22 && playerScore>dealerScore){
             playerScoreTotal++;
             document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
@@ -226,20 +229,20 @@ function clickStay(){
             console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
         }
         else if(playerScoreA<22 && dealerScore>22){
+            playerScoreTotal++;
             document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
             document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
             document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
             document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Won!";
             console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
-            playerScoreTotal++;
-        }else if(playerScore == 21 && dealerScore == 21){   
+        }else if(playerScore == 21 && dealerScore == 21 && dealer.Hand.length == 2 && curPlayer.Hand.length!= 2){   
             dealerScoreTotal++;
             document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
             document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
             document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
             document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Lost!";
             console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);         
-        }else if(playerScoreA == 21 && dealerScore == 21){   
+        }else if(playerScoreA == 21 && dealerScore == 21 && dealer.Hand.length == 2 && curPlayer.Hand.length!= 2){   
             dealerScoreTotal++;   
             document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
             document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
@@ -247,38 +250,18 @@ function clickStay(){
             document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Lost!";
             console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
         }else if(playerScore == dealerScore){
-            if(dealer.Hand.length>=curPlayer.Hand.length){
-                dealerScoreTotal++;
                 document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
                 document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
                 document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
-                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Lost!";
+                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Tie!";
                 console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
-            }else{
-                playerScoreTotal++;
+            } else if(playerScoreA == dealerScore){
                 document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
                 document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
                 document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
-                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Won!";
-                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
-            }
-        } else if(playerScoreA == dealerScore){
-            if(dealer.Hand.length>=curPlayer.Hand.length){
-                dealerScoreTotal++;
-                document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
-                document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
-                document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
-                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Lost!";
-                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
-            }else{
-                playerScoreTotal++;
-                document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
-                document.getElementById("dealer_score").innerHTML = "Dealer Score: "  + dealerScoreTotal;
-                document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: "  + dealerScore;
-                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScoreA + "  You Won!";
-                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal);
-            }
-        }     
+                document.getElementById("player_title").innerHTML = "Player Hand Value: "  + playerScore + "  You Tie!";
+                console.log("Player Hand Value: " + playerScoreA+ " Player Score: "+ playerScoreTotal + "\n"+ "Dealer Hand Value: "+ dealerScore + " Dealer Score: "+ dealerScoreTotal); 
+        }   
         else{
             dealerScoreTotal++;
             document.getElementById("player_score").innerHTML = "Player Score: " + playerScoreTotal;
@@ -292,7 +275,9 @@ function clickStay(){
 }
 
 
-  
+
+
+/*Function used to remove the playing cards from both dealer/player layouts*/  
 function removeCardsUI(){
     for(var i = dealerCardElements.length - 1; i >= 0; i--){
         dealerCardElements[i].parentNode.removeChild(dealerCardElements[i]);
@@ -305,13 +290,12 @@ function removeCardsUI(){
     document.getElementById("dealer_title").innerHTML = "Dealer Hand Value: ";
     document.getElementById("player_title").innerHTML = "Player Hand Value: ";
     document.getElementById("button_hit").disabled = false;
-    document.getElementById("button_stay").disabled = false;
-    
+    document.getElementById("button_stay").disabled = false; 
     hasHitMe = false;
 }
 
 
-
+/*Function used to generate the UI for a card element*/
 function generateCardUI(card,layout){
         var playCard = document.createElement("div");
         playCard.id = 'card';
@@ -353,7 +337,7 @@ function generateCardUI(card,layout){
         }
 }
 
-
+/*Function used to generate the a deck with a variable amount of cards depending on input*/
 function generateDeck(numOfDecks){
     let i = 0;
     while(i < numOfDecks){
@@ -365,7 +349,7 @@ function generateDeck(numOfDecks){
             var min = 0;
             var max = employeeList.length;
             var random = Math.floor(Math.random() * (+max - +min)) + +min;
-            //console.log("Min: "+ min + " Max: "+ max+ " Random: " +random);
+            //Check to see if this employee has already been added
             for(let a = 0; a < legend.length; a++){
                 if(legend[a].id==employeeList[random].id){
                     console.log("SAME EMPLOYEE" + legend[a].id + "  --- "+ employeeList[random].id);
@@ -373,6 +357,7 @@ function generateDeck(numOfDecks){
                     continue;
                 }
             }
+            //If they havent been added, add them to the legend 
             if(!sameEmployee){
             legend[z] = employeeList[random];
             z++;
@@ -430,6 +415,9 @@ function generateDeck(numOfDecks){
     shuffle();
 }
 
+/********************************************************************************/
+/*API request that setups the website*/
+/********************************************************************************/
 
 // Create a request variable and assign a new XMLHttpRequest object to it.
 var request = new XMLHttpRequest();
@@ -455,11 +443,9 @@ request.onload = function () {
       if(typeof(employee.imgUrl)!= 'undefined')
       employeeList.push(employee);
     });
+    //Lets set up our decks and render our legend 
     generateDeck(numDecks);
-    console.log("Deck Length: " + deck.length);
-    console.log(deck);
     generatePlayers(numPlayers);
-    console.log("Dealer: "+ players[0].Name + " Player: "+ players[1].Name);
     renderLegend();
     
   }
