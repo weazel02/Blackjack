@@ -71,7 +71,7 @@ body{
     border-radius: 5px;
     width: 17vw;
     height: 33vh;
-    margin: 15vh 1vw 0 2vw;
+    margin: 1vw 1vw 3vw 2vw;
     padding: 3vh 0 3vh 0;
 }
 #legend_layout{
@@ -83,18 +83,18 @@ body{
     background: rgba(48, 48, 48, 0.5);
     color: white;
     font-family: 'Cabin Sketch', cursive;
-    font-size: 2vh;
+    font-size: 1.3vw;
 }
 #button_hit{
     font-family: 'Monoton', cursive;
-    font-size: 4vh;
+    font-size: 2vw;
     margin: 6vh 1vw 0 0;
     height: 7vh;
     width: 10vw;
 }
 #button_stay{
     font-family: 'Monoton', cursive;
-    font-size: 4vh;
+    font-size: 2vw;
     height: 7vh;
     width: 10vw;
     margin: 1vh 1vw 0 0;
@@ -151,7 +151,3 @@ body{
 
 }
 
-
-#player_score{
-
-}
