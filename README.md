@@ -1,7 +1,7 @@
 # Blackjack
 A web based memorization game inspired by the rules of Blackjack!
 
-![logo](https://github.com/weazel02/Blackjack/blob/master/icons/Website_image.png)
+![logo](https://github.com/weazel02/Blackjack/blob/master/Website_image.png)
 
 ToDo List:
 
