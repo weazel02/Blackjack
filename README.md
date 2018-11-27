@@ -1,6 +1,8 @@
 # Blackjack
 A web based memorization game inspired by the rules of Blackjack!
 
+![logo](https://github.com/weazel02/Blackjack/blob/master/icons/Website_image.png)
+
 ToDo List:
 
 1. Use Restful API to retrieve JSON data about employees

@@ -474,6 +474,7 @@ request.onload = function () {
       cardValue: null
       }
       //Add the Employee object to the employeeList 
+      console.log(typeof(employee.imgUrl));
       if(typeof(employee.imgUrl)!= 'undefined')
       employeeList.push(employee);
     });
