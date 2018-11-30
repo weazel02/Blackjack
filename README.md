@@ -18,7 +18,7 @@ ToDo List:
 2. `npm install http-server -g`  
 This will install http-server globally so that it may be run from the command line.
 3. `cd` into Black Jack directory
-4. Run `http-server` from the command line
+4. Run `http-server -o` from the command line
 5. Navigate to http://localhost:8080  
 
 ## Usage:
