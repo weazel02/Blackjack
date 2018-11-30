@@ -315,7 +315,7 @@ function generatePlayers(num){
 function generateCardUI(card,layout){
         var playCard = document.createElement("div");
         playCard.id = 'card';
-        console.log(card);
+        
 
         var img = document.createElement("img");
         var iconTopLeft = document.createElement("img");
@@ -361,14 +361,12 @@ function generateDeck(numOfDecks){
         let z = 0;
         var sameEmployee = false;
         while(legend.length<values.length){
-            console.log(legend.length);
             var min = 0;
             var max = employeeList.length;
             var random = Math.floor(Math.random() * (+max - +min)) + +min;
             //Check to see if this employee has already been added
             for(let a = 0; a < legend.length; a++){
                 if(legend[a].id==employeeList[random].id){
-                    console.log("SAME EMPLOYEE" + legend[a].id + "  --- "+ employeeList[random].id);
                     sameEmployee = true;
                     continue;
                 }
@@ -382,7 +380,6 @@ function generateDeck(numOfDecks){
                 continue;
             }
         }
-        console.log(legend);
         //Iterate through our suits/values arrays
         for(let i = 0; i < values.length; i++){
             for(let j = 0; j < suits.length; j++){
@@ -400,7 +397,6 @@ function generateDeck(numOfDecks){
                 else{
                     if(trueValue == 'J' || trueValue == 'Q' || trueValue == 'K'){
                         trueValue = [10];
-                        console.log("TrueValue: "+ trueValue);
                     }
                     if(trueValue == 'A'){
                         trueValue = [1,11];
@@ -474,7 +470,7 @@ request.onload = function () {
       cardValue: null
       }
       //Add the Employee object to the employeeList 
-      console.log(typeof(employee.imgUrl));
+      
       if(typeof(employee.imgUrl)!= 'undefined')
       employeeList.push(employee);
     });
